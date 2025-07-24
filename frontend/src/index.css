@@ -1,5 +1,8 @@
 
+/* src/index.css */
 @import 'tailwindcss';
+
+/* ... rest of your CSS ... */
 
 body {
   margin: 0;

@@ -37,16 +37,16 @@ export const addResume  = async (req, res) => {
                 { $set: resumeFields, lastUpdated: Date.now() },
                 { new: true, upsert: true }
             );
-            return res.json(resume, { success: true, message: "Resume updated successfully" });
+            return res.json({ success: true, message: "Resume updated successfully", resume });
         }
 
         resume = new Resume(resumeFields);
         await resume.save();
-        res.json(resume, { success: true, message: "Resume created successfully" });
+        res.json({ success: true, message: "Resume created successfully", resume });
 
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).json({ success: false, message: 'Server error saving resume data.' });
     }
 };
 
@@ -59,7 +59,7 @@ export const getResume = async (req, res) => {
             return res.status(404).json({ success:false, message: 'No resume found for this user' });
         }
 
-        res.json(resume, { success: true, message: "Resume retrieved successfully" });
+        res.json({ success: true, message: "Resume retrieved successfully", resume });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');

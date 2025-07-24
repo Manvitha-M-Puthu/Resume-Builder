@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes.js';
 import resumeRoutes from './routes/resumeRoutes.js';
 import cors from 'cors';
+import aiRoutes from './routes/api/ai.js'; 
 
 const app = express();
 
@@ -33,7 +34,7 @@ app.use(cors(corsOptions));
 //Routes
 app.use('/api/auth', userRoutes);
 app.use('/api/resume', resumeRoutes);
-
+app.use('/api/ai', aiRoutes);
 //connection to mongoDB
 mongoose.connect(process.env.MONGODB_URI).then(()=> console.log("MongoDB connected!")).catch(err => console.error("MongoDB connection error:", err));
 
