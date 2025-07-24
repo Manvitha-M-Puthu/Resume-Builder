@@ -3,6 +3,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes.js';
 import resumeRoutes from './routes/resumeRoutes.js';
+import cors from 'cors';
 
 const app = express();
 
@@ -10,6 +11,25 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000', 
+    //reminder: Have to add your frontend URL here
+];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+  credentials: true, 
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 //Routes
 app.use('/api/auth', userRoutes);
 app.use('/api/resume', resumeRoutes);
