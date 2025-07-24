@@ -1,17 +1,18 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import './styles/AuthPages.css'; // Import custom styles
 
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL; 
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 function LoginPage() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-  const [message, setMessage] = useState(''); 
-  const [loading, setLoading] = useState(false); 
-  const navigate = useNavigate(); 
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,7 +20,7 @@ function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage(''); 
+    setMessage('');
     setLoading(true);
 
     try {
@@ -34,9 +35,9 @@ function LoginPage() {
       const data = await response.json();
 
       if (data.success) {
-        localStorage.setItem('token', data.token); 
+        localStorage.setItem('token', data.token);
         setMessage('Login successful! Redirecting...');
-        navigate('/build'); 
+        navigate('/build');
       } else {
         setMessage(data.message || 'Login failed. Please check your credentials.');
       }
@@ -49,61 +50,91 @@ function LoginPage() {
   };
 
   return (
-    <div className="flex justify-center items-center py-10">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Login</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Enter your email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
+    <div className="auth-page">
+      <div className="auth-background">
+        <div className="floating-shapes">
+          <div className="shape shape-1"></div>
+          <div className="shape shape-2"></div>
+          <div className="shape shape-3"></div>
+        </div>
+      </div>
+      
+      <div className="auth-container">
+        <div className="auth-card slide-up">
+          <div className="auth-header">
+            <h1 className="auth-title">Welcome Back</h1>
+            <p className="auth-subtitle">Sign in to continue building your professional resume</p>
           </div>
-          <div className="mb-6">
-            <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="********"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          {message && (
-            <p className={`text-center mb-4 ${message.includes('successful') ? 'text-green-500' : 'text-red-500'}`}>
-              {message}
-            </p>
-          )}
-          <div className="flex items-center justify-between">
+
+          <form onSubmit={handleSubmit} className="auth-form">
+            <div className="form-group">
+              <label htmlFor="email" className="form-label">Email Address</label>
+              <div className="input-wrapper">
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  className="form-input"
+                  placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+                <span className="input-icon">✉️</span>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password" className="form-label">Password</label>
+              <div className="input-wrapper">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  name="password"
+                  className="form-input"
+                  placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? '👁️' : '👁️‍🗨️'}
+                </button>
+              </div>
+            </div>
+
+            {message && (
+              <div className={`message ${message.includes('successful') ? 'success' : 'error'} fade-in`}>
+                {message}
+              </div>
+            )}
+
             <button
               type="submit"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
               disabled={loading}
+              className={`btn btn-primary btn-full ${loading ? 'loading' : ''}`}
             >
-              {loading ? 'Logging In...' : 'Login'}
+              {loading ? (
+                <span className="loading-spinner"></span>
+              ) : (
+                'Sign In'
+              )}
             </button>
+          </form>
+
+          <div className="auth-footer">
+            <p>
+              Don't have an account?{' '}
+              <Link to="/register" className="auth-link">
+                Register here
+              </Link>
+            </p>
           </div>
-        </form>
-        <p className="text-center text-gray-600 mt-4">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-indigo-600 hover:underline">
-            Register here
-          </Link>
-        </p>
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
-// src/pages/RegisterPage.jsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import './styles/AuthPages.css'; // Import custom styles
+
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 function RegisterPage() {
@@ -9,9 +10,10 @@ function RegisterPage() {
     email: '',
     password: '',
   });
-  const [message, setMessage] = useState(''); 
+  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); 
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,7 +21,7 @@ function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage(''); 
+    setMessage('');
     setLoading(true);
 
     try {
@@ -35,7 +37,7 @@ function RegisterPage() {
 
       if (data.success) {
         setMessage('Registration successful!');
-        localStorage.setItem('token', data.token); 
+        localStorage.setItem('token', data.token);
         navigate('/build');
       } else {
         setMessage(data.message || 'Registration failed. Please try again.');
@@ -49,76 +51,108 @@ function RegisterPage() {
   };
 
   return (
-    <div className="flex justify-center items-center py-10">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Register</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Your Name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
+    <div className="auth-page">
+      <div className="auth-background">
+        <div className="floating-shapes">
+          <div className="shape shape-1"></div>
+          <div className="shape shape-2"></div>
+          <div className="shape shape-3"></div>
+        </div>
+      </div>
+      
+      <div className="auth-container">
+        <div className="auth-card slide-up">
+          <div className="auth-header">
+            <h1 className="auth-title">Create Your Account</h1>
+            <p className="auth-subtitle">Join thousands building professional resumes with AI</p>
           </div>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Enter your email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="mb-6">
-            <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="********"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          {message && (
-            <p className={`text-center mb-4 ${message.includes('successful') ? 'text-green-500' : 'text-red-500'}`}>
-              {message}
-            </p>
-          )}
-          <div className="flex items-center justify-between">
+
+          <form onSubmit={handleSubmit} className="auth-form">
+            <div className="form-group">
+              <label htmlFor="name" className="form-label">Full Name</label>
+              <div className="input-wrapper">
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  className="form-input"
+                  placeholder="Enter your full name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
+                <span className="input-icon">👤</span>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="email" className="form-label">Email Address</label>
+              <div className="input-wrapper">
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  className="form-input"
+                  placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+                <span className="input-icon">✉️</span>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password" className="form-label">Password</label>
+              <div className="input-wrapper">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  name="password"
+                  className="form-input"
+                  placeholder="Create a strong password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? '👁️' : '👁️‍🗨️'}
+                </button>
+              </div>
+            </div>
+
+            {message && (
+              <div className={`message ${message.includes('successful') ? 'success' : 'error'} fade-in`}>
+                {message}
+              </div>
+            )}
+
             <button
               type="submit"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
               disabled={loading}
+              className={`btn btn-primary btn-full ${loading ? 'loading' : ''}`}
             >
-              {loading ? 'Registering...' : 'Register'}
+              {loading ? (
+                <span className="loading-spinner"></span>
+              ) : (
+                'Create Account'
+              )}
             </button>
+          </form>
+
+          <div className="auth-footer">
+            <p>
+              Already have an account?{' '}
+              <Link to="/login" className="auth-link">
+                Login here
+              </Link>
+            </p>
           </div>
-        </form>
-        <p className="text-center text-gray-600 mt-4">
-          Already have an account?{' '}
-          <Link to="/login" className="text-indigo-600 hover:underline">
-            Login here
-          </Link>
-        </p>
+        </div>
       </div>
     </div>
   );
