@@ -1,0 +1,14 @@
+*.env
+node_modules/
+.DS_Store
+npm-debug.log
+*.log
+*.lock
+*.pid
+*.gz
+*.tgz
+*.zip
+*.tar
+*.rar
+*.swp
+*.swo
