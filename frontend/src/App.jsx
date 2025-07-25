@@ -6,19 +6,13 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ResumeBuilderPage from './pages/ResumeBuilderPage'; 
 import PrivateRoute from './components/PrivateRoute';
+import Navbar from './components/Navbar';
 
 function App() {
   return (
     <Router>
       <div className="min-h-screen bg-gray-100">
-        {/* Simple Navigation Header */}
-        <nav className="bg-white shadow-md p-4 flex justify-between items-center">
-          <Link to="/" className="text-xl font-bold text-indigo-600">Resume AI</Link>
-          <div>
-            <Link to="/login" className="mr-4 text-gray-700 hover:text-indigo-600">Login</Link>
-            <Link to="/register" className="text-gray-700 hover:text-indigo-600">Register</Link>
-          </div>
-        </nav>
+        <Navbar />
 
         {/* Main Content Area */}
         <main className="container mx-auto p-4">

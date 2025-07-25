@@ -14,9 +14,6 @@ import InterestsSection from '../components/InterestsSection';
 import CustomSections from '../components/CustomSections';
 import ResumePreview from '../components/ResumePreview';
 
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 const scrollToSection = (id) => {
@@ -276,30 +273,77 @@ function ResumeBuilderPage() {
     }
   }, [navigate]);
 
+  // Updated PDF generation method - Text-based, not image
   const handleDownloadPDF = async () => {
     setDownloadLoading(true);
     setMessage('');
-    if (!resumePreviewRef.current) {
-      setMessage('Error: Resume content not found for PDF.');
-      setDownloadLoading(false);
-      return;
-    }
+    
     try {
-      const canvas = await html2canvas(resumePreviewRef.current, { scale:2, useCORS:true });
-      const img = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const w = 210, h = (canvas.height * w)/canvas.width;
-      let y = 0;
-      pdf.addImage(img,'PNG',0,y,w,h);
-      let left = h - 297;
-      while (left > 0) {
-        y = left - h;
-        pdf.addPage();
-        pdf.addImage(img,'PNG',0,y,w,h);
-        left -= 297;
+      const printContent = resumePreviewRef.current;
+      if (!printContent) {
+        setMessage('Error: Resume content not found for PDF.');
+        setDownloadLoading(false);
+        return;
       }
-      pdf.save('my-resume.pdf');
-      setMessage('Resume downloaded successfully!');
+
+      // Create a new window for printing with proper styles
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>Resume</title>
+            <style>
+              @page {
+                size: A4;
+                margin: 0.5in;
+              }
+              @media print {
+                body { 
+                  margin: 0; 
+                  font-family: Times, "Times New Roman", serif;
+                  font-size: 11px;
+                  line-height: 1.2;
+                  color: #000;
+                }
+                * { 
+                  -webkit-print-color-adjust: exact !important;
+                  color-adjust: exact !important;
+                }
+                h1, h2, h3 { 
+                  page-break-after: avoid;
+                }
+                section {
+                  page-break-inside: avoid;
+                  break-inside: avoid;
+                }
+              }
+              body {
+                font-family: Times, "Times New Roman", serif;
+                font-size: 11px;
+                line-height: 1.2;
+                color: #000;
+                margin: 0;
+                padding: 0;
+              }
+            </style>
+          </head>
+          <body>
+            ${printContent.innerHTML}
+          </body>
+        </html>
+      `);
+      
+      printWindow.document.close();
+      printWindow.focus();
+      
+      // Small delay to ensure content is loaded
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+        setMessage('PDF download initiated! Use "Save as PDF" in the print dialog.');
+      }, 500);
+
     } catch (err) {
       console.error(err);
       setMessage('Failed to generate PDF.');
@@ -336,6 +380,24 @@ function ResumeBuilderPage() {
     }
   };
 
+  useEffect(() => {
+    const handleDownloadEvent = () => {
+      handleDownloadPDF();
+    };
+
+    const handleSaveEvent = () => {
+      handleSubmit(new Event('submit'));
+    };
+
+    window.addEventListener('downloadResume', handleDownloadEvent);
+    window.addEventListener('saveResume', handleSaveEvent);
+
+    return () => {
+      window.removeEventListener('downloadResume', handleDownloadEvent);
+      window.removeEventListener('saveResume', handleSaveEvent);
+    };
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login');
@@ -353,27 +415,6 @@ function ResumeBuilderPage() {
 
   return (
     <div className="resume-builder-page">
-      <header className="builder-header">
-        <div className="header-content">
-          <div className="header-left">
-            <h1 className="builder-title">Resume Builder</h1>
-            <div className="progress-indicator">
-              <span className="progress-text">Building your future</span>
-              <div className="progress-bar"><div className="progress-fill"></div></div>
-            </div>
-          </div>
-          <div className="header-actions">
-            <button onClick={handleDownloadPDF} disabled={downloadLoading} className="btn btn-secondary btn-download">
-              {downloadLoading ? <span className="loading-spinner-small"></span> : '📄 Download PDF'}
-            </button>
-            <button onClick={handleSubmit} disabled={loading} className="btn btn-primary btn-save">
-              {loading ? <span className="loading-spinner-small"></span> : '💾 Save Resume'}
-            </button>
-            <button onClick={handleLogout} className="btn btn-outline btn-logout">🚪 Logout</button>
-          </div>
-        </div>
-      </header>
-
       {message && (
         <div className={`message-banner ${/successful|generated/.test(message) ? 'success' : 'error'} slide-down`}>
           <span className="message-icon">{/successful|generated/.test(message) ? '✅' : '⚠️'}</span>
@@ -441,7 +482,7 @@ function ResumeBuilderPage() {
                 />
               </section>
 
-              {/* Hackathons Section - FIXED PROP NAME */}
+              {/* Hackathons Section */}
               <section id="hackathons" className="form-section fade-in">
                 <div className="section-header">
                   <h2 className="section-title"><span className="section-icon">🏆</span> Hackathons & Achievements</h2>
@@ -455,7 +496,7 @@ function ResumeBuilderPage() {
                 />
               </section>
 
-              {/* Professional Development Section - FIXED PROP NAME */}
+              {/* Professional Development Section */}
               <section id="professionalDev" className="form-section fade-in">
                 <div className="section-header">
                   <h2 className="section-title"><span className="section-icon">📈</span> Professional Development</h2>
@@ -469,7 +510,7 @@ function ResumeBuilderPage() {
                 />
               </section>
 
-              {/* Certifications Section - FIXED PROP NAME */}
+              {/* Certifications Section */}
               <section id="certifications" className="form-section fade-in">
                 <div className="section-header">
                   <h2 className="section-title"><span className="section-icon">📜</span> Licenses & Certifications</h2>
@@ -483,7 +524,7 @@ function ResumeBuilderPage() {
                 />
               </section>
 
-              {/* Activities Section - FIXED PROP NAME */}
+              {/* Activities Section */}
               <section id="activities" className="form-section fade-in">
                 <div className="section-header">
                   <h2 className="section-title"><span className="section-icon">🎨</span> Activities & Hobbies</h2>
@@ -533,7 +574,13 @@ function ResumeBuilderPage() {
           <div className="preview-header">
             <h3 className="preview-title">Live Preview</h3>
             <div className="preview-actions">
-              <button className="btn btn-sm btn-outline">📱 Mobile View</button>
+              <button 
+                onClick={handleDownloadPDF}
+                className="btn btn-sm btn-outline"
+                disabled={downloadLoading}
+              >
+                {downloadLoading ? '⏳ Generating...' : '📥 Download PDF'}
+              </button>
             </div>
           </div>
           <div className="preview-content" ref={resumePreviewRef}>

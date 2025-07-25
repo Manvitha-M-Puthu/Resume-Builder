@@ -55,13 +55,6 @@ function LicensesAndCertificationsSection({ licensesAndCertifications, onLicense
           )}
         </div>
       ))}
-      <button
-        type="button"
-        onClick={onAddLicense}
-        className="mt-4 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-      >
-        Add License/Certification
-      </button>
     </section>
   );
 }

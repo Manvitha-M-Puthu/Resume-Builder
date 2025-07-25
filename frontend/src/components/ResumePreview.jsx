@@ -14,191 +14,329 @@ function ResumePreview({ resumeData }) {
     customSections,
   } = resumeData;
 
-  // Define simple, universally supported styles
-  const containerStyle = {
-    fontFamily: 'sans-serif',
-    color: '#333333', // Dark gray for text
-    padding: '2rem', // 32px
-    lineHeight: '1.5',
-    maxWidth: '700px', // Roughly max-w-2xl equivalent
-    margin: '0 auto',
-    backgroundColor: '#FFFFFF',
-    border: '1px solid #E0E0E0', // Light gray border
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06)', // Simple shadow
-  };
-
-  const sectionStyle = {
-    marginBottom: '1.5rem', // 24px
-  };
-
-  const headingStyle = {
-    fontSize: '1.25rem', // text-xl
-    fontWeight: 'bold',
-    borderBottom: '2px solid #D0D0D0', // Light gray border-b-2
-    paddingBottom: '0.25rem', // pb-1
-    marginBottom: '0.75rem', // mb-3
-  };
-
-  const subHeadingStyle = {
-    fontSize: '1.125rem', // text-lg
-    fontWeight: '600', // semi-bold
-  };
-
-  const textStyle = {
-    color: '#4A4A4A', // Slightly lighter gray for general text
-    fontSize: '0.9375rem', // Slightly smaller font for details
-  };
-
-  const listItemStyle = {
-    marginLeft: '1.5rem', // ml-4 for list indentation
-    listStyleType: 'disc',
-    color: '#4A4A4A',
-  };
-
-  const linkStyle = {
-    color: '#0000FF', // Standard blue for links
-    textDecoration: 'underline',
-    marginRight: '0.5rem',
-  };
-
   return (
-    <div style={containerStyle} className="print-area"> {/* Keep print-area if used for specific print CSS */}
-      {/* Header/About Section (You can add name/contact info here later) */}
-      <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-        <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', marginBottom: '0.25rem' }}>Your Name Here</h1> {/* text-3xl */}
-        <p style={{ fontSize: '1.125rem', color: '#666666' }}>Your Email | Your Phone | Your LinkedIn | Your GitHub</p> {/* text-lg */}
-      </div>
+    <div style={{
+      fontFamily: 'Times, "Times New Roman", serif',
+      fontSize: '11px',
+      lineHeight: '1.2',
+      color: '#000',
+      padding: '0.5in',
+      maxWidth: '8.5in',
+      minHeight: '11in',
+      margin: '0 auto',
+      backgroundColor: '#fff',
+      boxSizing: 'border-box',
+    }}>
+      
+      {/* Header Section */}
+      <header style={{
+        textAlign: 'center',
+        marginBottom: '20px',
+      }}>
+        <h1 style={{
+          fontSize: '18px',
+          fontWeight: 'bold',
+          margin: '0 0 5px 0',
+          color: '#000',
+          letterSpacing: '0.5px',
+        }}>
+          Your Name Here
+        </h1>
+        <div style={{
+          fontSize: '11px',
+          color: '#000',
+          lineHeight: '1.3',
+        }}>
+          your.email@example.com | Your LinkedIn | Your GitHub
+        </div>
+      </header>
 
-      {/* Education */}
+      {/* Education Section */}
       {education.length > 0 && (
-        <div style={sectionStyle}>
-          <h2 style={headingStyle}>Education</h2>
+        <section style={{ marginBottom: '16px' }}>
+          <h2 style={{
+            fontSize: '14px',
+            fontWeight: 'bold',
+            margin: '0 0 8px 0',
+            color: '#000',
+            borderBottom: 'none',
+          }}>
+            Education
+          </h2>
           {education.map((edu, index) => (
-            <div key={index} style={{ marginBottom: '0.75rem' }}>
-              <h3 style={subHeadingStyle}>{edu.institution} - {edu.degree}</h3>
-              <p style={textStyle}>{edu.years} | {edu.location}</p>
-              {edu.details && <p style={{ ...textStyle, fontSize: '0.875rem' }}>{edu.details}</p>} {/* text-sm */}
+            <div key={index} style={{ marginBottom: '8px' }}>
+              <div style={{
+                fontSize: '12px',
+                fontWeight: 'bold',
+                marginBottom: '2px',
+                lineHeight: '1.2',
+              }}>
+                {edu.degree}, {edu.institution} <span style={{ float: 'right' }}>{edu.years}</span>
+              </div>
+              <div style={{
+                fontSize: '11px',
+                color: '#000',
+                clear: 'both',
+                marginBottom: '4px',
+              }}>
+                {edu.details} {edu.location}
+              </div>
             </div>
           ))}
-        </div>
+        </section>
       )}
 
-      {/* Skills */}
+      {/* Skills Section */}
       {skills.length > 0 && (
-        <div style={sectionStyle}>
-          <h2 style={headingStyle}>Skills</h2>
+        <section style={{ marginBottom: '16px' }}>
+          <h2 style={{
+            fontSize: '14px',
+            fontWeight: 'bold',
+            margin: '0 0 8px 0',
+            color: '#000',
+          }}>
+            Skills
+          </h2>
           {skills.map((category, index) => (
-            <div key={index} style={{ marginBottom: '0.5rem' }}>
-              <h3 style={{ fontWeight: '600' }}>{category.heading}:</h3>
-              <p style={textStyle}>{category.items.join(', ')}</p>
+            <div key={index} style={{
+              fontSize: '11px',
+              marginBottom: '4px',
+              lineHeight: '1.3',
+            }}>
+              <strong>{category.heading} :</strong> {category.items.filter(item => item.trim()).join(', ')}.
             </div>
           ))}
-        </div>
+        </section>
       )}
 
-      {/* Projects */}
+      {/* Projects Section */}
       {projects.length > 0 && (
-        <div style={sectionStyle}>
-          <h2 style={headingStyle}>Projects</h2>
+        <section style={{ marginBottom: '16px' }}>
+          <h2 style={{
+            fontSize: '14px',
+            fontWeight: 'bold',
+            margin: '0 0 8px 0',
+            color: '#000',
+          }}>
+            Projects
+          </h2>
           {projects.map((project, index) => (
-            <div key={index} style={{ marginBottom: '0.75rem' }}>
-              <h3 style={subHeadingStyle}>{project.title}</h3>
-              <ul style={listItemStyle}>
-                {project.description.split('\n').map((line, i) =>
-                   line.trim().length > 0 && <li key={i}>{line.trim()}</li>
-                )}
-              </ul>
-              {project.technologies.length > 0 && (
-                <p style={{ ...textStyle, fontSize: '0.875rem', marginTop: '0.25rem' }}>
-                  <strong>Technologies:</strong> {project.technologies.join(', ')}
-                </p>
+            <div key={index} style={{ marginBottom: '10px' }}>
+              <h3 style={{
+                fontSize: '12px',
+                fontWeight: 'bold',
+                margin: '0 0 3px 0',
+                color: '#000',
+              }}>
+                {project.title}
+              </h3>
+              <div style={{
+                fontSize: '11px',
+                marginBottom: '3px',
+                lineHeight: '1.3',
+              }}>
+                {project.description.split('\n').map((line, i) => (
+                  line.trim() && <div key={i} style={{ marginBottom: '2px' }}>{line.trim()}</div>
+                ))}
+              </div>
+              {project.technologies.filter(tech => tech.trim()).length > 0 && (
+                <div style={{
+                  fontSize: '10px',
+                  marginBottom: '2px',
+                  color: '#333',
+                }}>
+                  <strong>Technologies:</strong> {project.technologies.filter(tech => tech.trim()).join(', ')}
+                </div>
               )}
               {(project.github_link || project.live_link) && (
-                <p style={{ ...textStyle, fontSize: '0.875rem' }}>
-                  {project.github_link && <a href={project.github_link} target="_blank" rel="noopener noreferrer" style={linkStyle}>GitHub</a>}
-                  {project.live_link && <a href={project.live_link} target="_blank" rel="noopener noreferrer" style={linkStyle}>Live Demo</a>}
-                </p>
+                <div style={{
+                  fontSize: '10px',
+                  color: '#0066cc',
+                }}>
+                  {project.github_link && (
+                    <span style={{ marginRight: '10px' }}>GitHub: {project.github_link}</span>
+                  )}
+                  {project.live_link && (
+                    <span>Live: {project.live_link}</span>
+                  )}
+                </div>
               )}
             </div>
           ))}
-        </div>
+        </section>
       )}
 
       {/* Hackathons and Achievements */}
       {hackathonsAndAchievements.length > 0 && (
-        <div style={sectionStyle}>
-          <h2 style={headingStyle}>Hackathons & Achievements</h2>
+        <section style={{ marginBottom: '16px' }}>
+          <h2 style={{
+            fontSize: '14px',
+            fontWeight: 'bold',
+            margin: '0 0 8px 0',
+            color: '#000',
+          }}>
+            Hackathons and Achievements
+          </h2>
           {hackathonsAndAchievements.map((item, index) => (
-            <div key={index} style={{ marginBottom: '0.75rem' }}>
-              <h3 style={subHeadingStyle}>{item.name}</h3>
-              <p style={textStyle}>{item.details}</p>
-              {item.achievement && <p style={{ ...textStyle, fontSize: '0.875rem' }}><strong>Achievement:</strong> {item.achievement}</p>}
+            <div key={index} style={{ marginBottom: '8px' }}>
+              <h3 style={{
+                fontSize: '12px',
+                fontWeight: 'bold',
+                margin: '0 0 2px 0',
+                color: '#000',
+              }}>
+                {item.name}
+              </h3>
+              <div style={{
+                fontSize: '11px',
+                lineHeight: '1.3',
+                marginBottom: '2px',
+              }}>
+                {item.details}
+              </div>
+              {item.achievement && (
+                <div style={{
+                  fontSize: '11px',
+                  color: '#000',
+                }}>
+                  {item.achievement}
+                </div>
+              )}
             </div>
           ))}
-        </div>
+        </section>
       )}
 
       {/* Professional Development */}
       {professionalDevelopment.length > 0 && (
-        <div style={sectionStyle}>
-          <h2 style={headingStyle}>Professional Development</h2>
+        <section style={{ marginBottom: '16px' }}>
+          <h2 style={{
+            fontSize: '14px',
+            fontWeight: 'bold',
+            margin: '0 0 8px 0',
+            color: '#000',
+          }}>
+            Professional Development
+          </h2>
           {professionalDevelopment.map((item, index) => (
-            <div key={index} style={{ marginBottom: '0.75rem' }}>
-              <h3 style={subHeadingStyle}>{item.title} {item.company && `at ${item.company}`}</h3>
-              <p style={textStyle}>{item.date} | {item.location}</p>
-              <p style={textStyle}>{item.description}</p>
+            <div key={index} style={{ marginBottom: '8px' }}>
+              <div style={{
+                fontSize: '12px',
+                fontWeight: 'bold',
+                marginBottom: '2px',
+              }}>
+                {item.title} {item.company && `- ${item.company}`}, {item.location} <span style={{ float: 'right' }}>{item.date}</span>
+              </div>
+              {item.description && (
+                <div style={{
+                  fontSize: '11px',
+                  lineHeight: '1.3',
+                  clear: 'both',
+                }}>
+                  {item.description}
+                </div>
+              )}
             </div>
           ))}
-        </div>
+        </section>
       )}
 
       {/* Licenses and Certifications */}
       {licensesAndCertifications.length > 0 && (
-        <div style={sectionStyle}>
-          <h2 style={headingStyle}>Licenses & Certifications</h2>
+        <section style={{ marginBottom: '16px' }}>
+          <h2 style={{
+            fontSize: '14px',
+            fontWeight: 'bold',
+            margin: '0 0 8px 0',
+            color: '#000',
+          }}>
+            Licences and Certifications
+          </h2>
           {licensesAndCertifications.map((item, index) => (
-            <div key={index} style={{ marginBottom: '0.75rem' }}>
-              <h3 style={subHeadingStyle}>{item.name}</h3>
-              {item.issuer && <p style={textStyle}>Issued by {item.issuer}</p>}
+            <div key={index} style={{
+              fontSize: '11px',
+              marginBottom: '3px',
+              lineHeight: '1.3',
+            }}>
+              {item.name} {item.issuer && `– ${item.issuer}`}
             </div>
           ))}
-        </div>
+        </section>
       )}
 
       {/* Extra-Curricular Activities and Hobbies */}
       {extraCurricularActivitiesAndHobbies.length > 0 && (
-        <div style={sectionStyle}>
-          <h2 style={headingStyle}>Activities & Hobbies</h2>
+        <section style={{ marginBottom: '16px' }}>
+          <h2 style={{
+            fontSize: '14px',
+            fontWeight: 'bold',
+            margin: '0 0 8px 0',
+            color: '#000',
+          }}>
+            Extra - Curricular Activities and Hobbies
+          </h2>
           {extraCurricularActivitiesAndHobbies.map((item, index) => (
-            <div key={index} style={{ marginBottom: '0.75rem' }}>
-              <h3 style={subHeadingStyle}>{item.name} {item.role && `(${item.role})`}</h3>
-              <p style={textStyle}>{item.years}</p>
-              <p style={textStyle}>{item.description}</p>
+            <div key={index} style={{ marginBottom: '6px' }}>
+              <div style={{
+                fontSize: '12px',
+                fontWeight: 'bold',
+                marginBottom: '2px',
+              }}>
+                {item.name}{item.role && `, ${item.role}`} <span style={{ float: 'right' }}>{item.years}</span>
+              </div>
+              {item.description && (
+                <div style={{
+                  fontSize: '11px',
+                  lineHeight: '1.3',
+                  clear: 'both',
+                }}>
+                  {item.description}
+                </div>
+              )}
             </div>
           ))}
-        </div>
+        </section>
       )}
 
       {/* Interests */}
-      {interests.length > 0 && (
-        <div style={sectionStyle}>
-          <h2 style={headingStyle}>Interests</h2>
-          <p style={textStyle}>{interests.join(', ')}</p>
-        </div>
+      {interests.length > 0 && interests.some(interest => interest.trim()) && (
+        <section style={{ marginBottom: '16px' }}>
+          <h2 style={{
+            fontSize: '14px',
+            fontWeight: 'bold',
+            margin: '0 0 8px 0',
+            color: '#000',
+          }}>
+            Interests
+          </h2>
+          <div style={{
+            fontSize: '11px',
+            lineHeight: '1.3',
+          }}>
+            {interests.filter(interest => interest.trim()).join(', ')}
+          </div>
+        </section>
       )}
 
       {/* Custom Sections */}
-      {customSections.length > 0 && (
-        <div style={sectionStyle}>
-          <h2 style={headingStyle}>Additional Sections</h2>
-          {customSections.map((section, index) => (
-            <div key={index} style={{ marginBottom: '0.75rem' }}>
-              <h3 style={subHeadingStyle}>{section.heading}</h3>
-              <p style={textStyle}>{section.content}</p>
-            </div>
-          ))}
-        </div>
-      )}
+      {customSections.length > 0 && customSections.map((section, index) => (
+        <section key={index} style={{ marginBottom: '16px' }}>
+          <h2 style={{
+            fontSize: '14px',
+            fontWeight: 'bold',
+            margin: '0 0 8px 0',
+            color: '#000',
+          }}>
+            {section.heading}
+          </h2>
+          <div style={{
+            fontSize: '11px',
+            lineHeight: '1.3',
+          }}>
+            {section.content}
+          </div>
+        </section>
+      ))}
     </div>
   );
 }

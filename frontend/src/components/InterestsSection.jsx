@@ -42,13 +42,6 @@ function InterestsSection({ interests, onInterestsChange }) {
           )}
         </div>
       ))}
-      <button
-        type="button"
-        onClick={addInterest}
-        className="mt-4 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-      >
-        Add Interest
-      </button>
     </section>
   );
 }
